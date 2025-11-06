@@ -16,7 +16,7 @@ const PrivetRouter = ({ children }) => {
   }
 
   if (!user) {
-    return <Navigate to={"/auth/login"} state={location.pathname}></Navigate>;
+    return <Navigate to={"/auth/login"} state={location?.pathname}></Navigate>;
   }
 
   return <div>{children}</div>;
