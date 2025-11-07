@@ -6,7 +6,7 @@ const ProductsCard = ({ product }) => {
     <div>
       <div className="card bg-base-100 h-[60vh] shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
         <figure className="p-3">
-          <img className="" src={product?.image} alt="Shoes" />
+          <img className="" src={product?.image} alt={product.title} />
         </figure>
         <div className="card-body">
           <h2 className="card-title">

@@ -1,10 +1,14 @@
-import React from "react";
-import { useLoaderData } from "react-router";
+import React, { useState } from "react";
+
 import ProductsCard from "../Components/ProductCard/ProductsCard";
 import Container from "../Components/Container/Container";
+import useAxioInstance from "../Hooks/useAxioInstance";
 
 const AllProducts = () => {
-  const products = useLoaderData();
+
+  const [products, setProducts] = useState([]);
+  const axios = useAxioInstance();
+  axios.get("/products").then((res) => setProducts(res.data));
 
   return (
     <div>

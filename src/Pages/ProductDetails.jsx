@@ -1,30 +1,25 @@
-import React, {
-  Suspense,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLoaderData } from "react-router";
-import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 import ProductBids from "../Components/ProductBids/ProductBids";
 import { Commet } from "react-loading-indicators";
+import useInfo from "../Hooks/useInfo";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const ProductDetails = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useInfo();
+  const axiosSecure = useAxiosSecure();
   const [bids, setBids] = useState([]);
   const data = useLoaderData();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/bids/${data._id}`, {
-      headers: {
-        authorization: `Bearer ${user.accessToken}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setBids(data));
-  }, [data, user]);
+    axiosSecure
+      .get(`/products/bids/${data._id}`)
+      .then((res) => {
+        setBids(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, [data, axiosSecure]);
 
   const bidModalRef = useRef(null);
 
@@ -49,24 +44,16 @@ const ProductDetails = () => {
       bid_price: price,
       status: "pending",
     };
-    fetch("http://localhost:3000/bids", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(newBids),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        e.target.reset();
-        if (data.insertedId) {
-          toast.success("Your price is sent to the seller");
-          bidModalRef.current.close();
-          newBids._id = data.insertedId;
+    axiosSecure.post("/bids", newBids).then((config) => {
+      e.target.reset();
+      if (config.data.insertedId) {
+        toast.success("Your price is sent to the seller");
+        bidModalRef.current.close();
+        newBids._id = data.insertedId;
 
-          setBids([...bids, newBids].sort((a, b) => b.bid_price - a.bid_price));
-        }
-      });
+        setBids([...bids, newBids].sort((a, b) => b.bid_price - a.bid_price));
+      }
+    });
   };
 
   return (

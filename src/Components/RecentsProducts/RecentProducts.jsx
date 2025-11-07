@@ -1,10 +1,13 @@
-import React, { use } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 import ProductsCard from "../ProductCard/ProductsCard";
+import useAxioInstance from "../../Hooks/useAxioInstance";
 
-const RecentProducts = ({ recentProductsPromise }) => {
-  const recentProduct = use(recentProductsPromise);
-
+const RecentProducts = () => {
+  const [recentProduct, setRecentProduct] = useState([]);
+  const axios = useAxioInstance();
+  // const recentProduct = use(recentProductsPromise);
+  axios.get("/recent-products").then((res) => setRecentProduct(res.data));
   return (
     <div>
       <h2 className="text-center text-4xl font-semibold my-6 sm:my-12 ">

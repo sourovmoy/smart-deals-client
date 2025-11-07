@@ -4,10 +4,6 @@ import Container from "../Components/Container/Container";
 import RecentProducts from "../Components/RecentsProducts/RecentProducts";
 import { Commet } from "react-loading-indicators";
 
-const recentProductsPromise = fetch(
-  "http://localhost:3000/recent-products"
-).then((res) => res.json());
-
 const Home = () => {
   return (
     <div>
@@ -25,9 +21,7 @@ const Home = () => {
             </div>
           }
         >
-          <RecentProducts
-            recentProductsPromise={recentProductsPromise}
-          ></RecentProducts>
+          <RecentProducts></RecentProducts>
         </Suspense>
       </Container>
     </div>

@@ -1,13 +1,14 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../Context/AuthContext";
-import axios from "axios";
+import React from "react";
 import useInfo from "../Hooks/useInfo";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useNavigate } from "react-router";
 
 const CreateProducts = () => {
   // const { user } = useContext(AuthContext);
-  const { user } = useInfo();
-  console.log(user);
+  const { user } = useInfo(); // call from custom hooks
+  const AxiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,7 +45,7 @@ const CreateProducts = () => {
       description,
       sellerContact,
     };
-    axios.post("http://localhost:3000/products", newProducts).then((data) => {
+    AxiosSecure.post("/products", newProducts).then(( ) => {
       Swal.fire({
         title: "Do you want to save the changes?",
         showDenyButton: true,
@@ -55,13 +56,12 @@ const CreateProducts = () => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           Swal.fire("Saved!", "", "success");
+          e.target.reset();
+          navigate("/");
         } else if (result.isDenied) {
           Swal.fire("Changes are not saved", "", "info");
         }
       });
-
-      e.target.reset();
-      console.log(data.data);
     });
   };
 
